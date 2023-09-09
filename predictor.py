@@ -43,7 +43,7 @@ def predict_tabular_classification_sample(
                 dlc_value = instance_dict["DLC"]
                 message = f"Dangerous message ID: {id_value} - DLC: {dlc_value} - Classe 1 - Score: {prediction['scores'][1]}\n"
                 print_red(message)  # Imprime a mensagem em vermelho
-                with open("DangerousMessages.txt", "a") as file:
+                with open("ReceivedMessages/DangerousMessages.txt", "a") as file:
                     file.write(message)
                 
                   
