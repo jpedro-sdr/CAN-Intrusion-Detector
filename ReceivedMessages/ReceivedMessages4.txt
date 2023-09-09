@@ -27,3 +27,5 @@ Mensagem recebida - ID 0330 - DLC    8 0004db0034000000
 Mensagem recebida - ID 0360 - DLC    8 c45f003400000000
 Mensagem recebida - ID 0112 - DLC    8 007be8de00000000
 Mensagem recebida - ID 0223 - DLC    8 00f8da0000000000
+Mensagem recebida - ID 0123 - DLC    3 112233
+Mensagem recebida - ID 0123 - DLC    3 112233

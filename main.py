@@ -8,7 +8,7 @@ from predictor import predict_tabular_classification_sample
 os.environ["ENDPOINT_ID"] = "539941573098471424"
 os.environ["PROJECT_ID"] = "792014674767"
 os.environ["INPUT_DATA_FILE"] = "INPUT-JSON"
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/def2/serviceAccount.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "serviceAccount.json"
 os.environ['GRPC_DNS_RESOLVER'] = 'native'
 
 def main():

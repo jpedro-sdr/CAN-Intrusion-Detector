@@ -30,7 +30,7 @@ class MyListener(can.Listener):
                 message_string = f"Mensagem recebida - ID {str(int(id_value)).zfill(4)} - DLC {formatted_data_dlc}"
                 print(message_string)
                 # Salvar a mensagem no arquivo "ReceivedMessages.txt"
-                with open("ReceivedMessages4.txt", "a") as file:
+                with open("ReceivedMessages/ReceivedMessages4.txt", "a") as file:
                     file.write(message_string + "\n")
                 
                 data_from_message = {"ID": str(int(id_value)).zfill(4), "DLC": formatted_data_dlc}
