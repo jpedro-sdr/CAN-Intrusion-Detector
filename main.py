@@ -3,7 +3,7 @@ import can
 import threading
 from my_listener import MyListener
 from notifier import Notifier
-from predictor import predict_tabular_classification_sample
+from predictor import predict_tabular_classification
 
 os.environ["ENDPOINT_ID"] = "539941573098471424"
 os.environ["PROJECT_ID"] = "792014674767"
@@ -17,9 +17,6 @@ def main():
         print_listener = MyListener()
         custom_notifier = Notifier(bus, [print_listener])
         custom_notifier.start()
-        #bus.send(can.Message(arbitration_id=1, is_extended_id=True))
-        #bus.send(can.Message(arbitration_id=2, is_extended_id=True))
-        #bus.send(can.Message(arbitration_id=1, is_extended_id=False))
 
         try:
             while True:
