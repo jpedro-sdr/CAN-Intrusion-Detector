@@ -11,7 +11,7 @@ def get_message_by_id(target_id):
 def checkDataFormat(data, expected_message):
     # mask = re.escape(expected_message["format"])
     mask = expected_message["format"]
-    mask = mask.replace("#", "[0-9A-Fa-f]")
+    mask = mask.replace("#", "[0-1]")
     regularExpression = f"^{mask}$"
     # print(re.match(regularExpression, data))
     return re.match(regularExpression, data) is not None
@@ -51,8 +51,11 @@ def getSignalValue(signal, expected_signal):
     value = signal * expected_signal["scale"] + expected_signal["offset"]
     return value
 
-def stringToHex(string):
+def stringBinToInt(string):
     # print(string, type(string))
+    return int(string, 2)
+
+def stringToHex(string):
     return int(string, 16)
 
 def checkDataRange(data, expected_message):
@@ -64,8 +67,8 @@ def checkDataRange(data, expected_message):
         # print(signal)
         signal_index = signals.index(signal)
         expected_signal = expected_message["signals"][signal_index]
-        # print(signal, type(signal), 'antes do stringToHex')
-        signal = stringToHex(signal)
+        # print(signal, type(signal), 'antes do stringBinToInt')
+        signal = stringBinToInt(signal)
         value = getSignalValue(signal, expected_signal)
         # print(value, 'value')
         if not checkSignalRange(value, expected_signal):
@@ -88,8 +91,10 @@ def checkPeriod(timestamp, id):
     last_message_timestamp = datetime.datetime.fromtimestamp(last_message_timestamp)
     delta = evalueated_message_timestamp - last_message_timestamp
     milliseconds = delta.total_seconds() * 1000
-    if milliseconds < expected_message["period"]:
-        print(f'[DDos detected] Period of message with id ${id} is lower than allowed. Allowed: {expected_message["period"]}, Received: {milliseconds}')
+    msg_period = expected_message["period"]
+
+    if milliseconds/msg_period < 0.95: # 5% of tolerance
+        print(f'[Out of period] Period of message with id ${id} is lower than allowed. Allowed: {expected_message["period"]}, Received: {milliseconds}')
         return False
 
 
@@ -100,26 +105,32 @@ def set_message_last_timestamp(id, timestamp):
         return False
     expected_message["last_message_timestamp"] = timestamp
     return True
-    
+
 
 # (1694027572.059435) can0 360#8AD800C3A0000000
 
 def checkMsg(id, data, timestamp):
+    # id = id.lstrip('0')
+    data_hex = stringToHex(data)
+    data_binary = bin(data_hex)
+    data_binary = data_binary[2:]
+    data = data_binary.zfill(16)
+    # print(data_binary, type(data_binary), 'data_binary', data)
     expected_message = get_message_by_id(id)
     if expected_message is None:
-        print(f'Message with id ${id} is not allowed in the message list. Invasion detected')
+        print(f'Message with id {id} is not allowed in the message list. Invasion detected')
         return False
     isFormatAllowed = checkDataFormat(data, expected_message)
     if not isFormatAllowed:
-        print(f'Format of message with id ${id} is not allowed. Invasion detected')
+        print(f'Format of message with id {id} is not allowed. Invasion detected')
         return False
     areSignalsInRange = checkDataRange(data, expected_message)
     if not areSignalsInRange:
-        print(f'Values of signals of message with id ${id} are out of range. Invasion detected')
+        print(f'Values of signals of message with id {id} are out of range. Invasion detected')
         return False
     isPeriodAllowed = checkPeriod(timestamp, id)
     if not isPeriodAllowed:
-        print(f'Timestamp of message with id ${id} is not allowed. Invasion detected')
+        print(f'Timestamp of message with id {id} is not allowed. Invasion detected')
         return False
     return True
     
@@ -127,27 +138,23 @@ def checkMsg(id, data, timestamp):
 
 
 if __name__ == '__main__':
-   with open('canlog.txt', 'r') as f:
+    print(messages)
+    cntt = 0
+    with open('canlog4.txt', 'r') as f:
        lines = f.readlines()
        for line in lines:
            line = line.split(' ')
            id = line[2].split('#')[0]
            data = line[2].split('#')[1]
            timestamp = line[0].split('(')[1].split(')')[0]
-           print(timestamp)
+           print(timestamp, 'timestamp')
            timestamp = float(timestamp)
            isMsgValid = checkMsg(id, data, timestamp)
            set_message_last_timestamp(id, timestamp)
            if not isMsgValid:
+                cntt += 1
                 # print(line, type(line), 'line')
-                with open('invalid_msgs3.txt', 'a') as f2:
+                with open('invalid_msgs4.txt', 'a') as f2:
                     f2.write(' '.join(line))
-               
-
-
-    
-
-
-
-# def test():
+    print('Wrong cases: ', cntt)            
     
