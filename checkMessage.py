@@ -111,8 +111,7 @@ def set_message_last_timestamp(id, timestamp):
 
 def checkMsg(id, data, timestamp):
     # id = id.lstrip('0')
-    data = f'{data:0>5}'
-    print('Data before transform', data)
+    # print('Data before transform', data)
     first_part_data = data[:2]
     second_part_data = data[2:]
     second_part_data = second_part_data.replace('\n', '')
@@ -121,7 +120,7 @@ def checkMsg(id, data, timestamp):
     data_binary = bin(data_hex)
     data_binary = data_binary[2:]
     data = data_binary.zfill(16)[::-1]
-    print(data_binary, type(data_binary), 'data_binary', data)
+    # print(data_binary, type(data_binary), 'data_binary', data)
     expected_message = get_message_by_id(id)
     if expected_message is None:
         print(f'Message with id {id} is not allowed in the message list. Invasion detected')

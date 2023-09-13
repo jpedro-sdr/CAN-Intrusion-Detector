@@ -144,15 +144,15 @@ messages = [
     "name": "Engine RPM. Speed",
     "period": 100,
     "DLC": 2,
-    "pattern": r"(.{2})00000000000000",
-    "format": '##00000000000000',
+    "pattern": r"(.{16})",
+    "format": '################',
     "signals": [
         {
             "signal": "Engine RPM. Speed",
-            "bitLength": 2,
+            "bitLength": 16,
             "bitStart": 0,
             "min": -32767,
-            "max": 32767,
+            "max": 32766,
             "unit": "rpm",
             "scale": 1.00000,
             "offset": -32767
@@ -642,7 +642,7 @@ messages = [
   {
     "id": "477",
     "name": "Trunk Open/Close Switch",
-    "period": 5000,
+    "period": 1000,
     "DLC": 1,
     "pattern": r"(.{1})000000000000000",
     "format": '#000000000000000',
