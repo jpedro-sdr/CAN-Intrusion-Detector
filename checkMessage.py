@@ -112,6 +112,13 @@ def set_message_last_timestamp(id, timestamp):
 # (1694027572.059435) can0 360#8AD800C3A0000000
 
 def checkMsg(id, data, timestamp):
+    data = data.lstrip()
+        # Remova o primeiro caractere que não seja espaço
+    data = " ".join(data.split())
+    for i, char in enumerate(data):
+        if char != ' ':
+            data = data[:i] + data[i+1:]
+            break
     # id = id.lstrip('0')
     # print('Data before transform', data)
     first_part_data = data[:2]
@@ -119,6 +126,7 @@ def checkMsg(id, data, timestamp):
     second_part_data = second_part_data.replace('\n', '')
     data = f'{second_part_data}{first_part_data}'
     data_hex = stringToHex(data)
+    #print("passou")
     data_binary = bin(data_hex)
     data_binary = data_binary[2:]
     data = data_binary.zfill(16)[::-1]

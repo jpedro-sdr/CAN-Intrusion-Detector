@@ -3,7 +3,7 @@ import re
 import os
 import threading
 from predictor import predict_tabular_classification
-from dockerPredictor import dockerPredictor
+from dockerPredictor import dockerPrediction
 
 class MyListener(can.Listener):
     def __init__(self):
@@ -21,8 +21,15 @@ class MyListener(can.Listener):
                 self.previous_message_data = message_data
 
     def extract_message_data(self, msg):
+        #print(msg)
         regex_pattern = r'ID:\s+([0-9A-Fa-f]+)\s+.*?\s+DL:\s+(\d+)\s+(.*?)$'
         match = re.search(regex_pattern, str(msg))
+        timestamp_match = re.search(r'Timestamp: (\d+\.\d+)', str(msg))
+        #print(timestamp_match)
+        timestamp = ""
+        if timestamp_match:
+            timestamp = float(timestamp_match.group(1))
+            #print("TimeStamp:", timestamp)
         if match:
             id_value = match.group(1)
             dlc_value = int(match.group(2))
@@ -32,7 +39,7 @@ class MyListener(can.Listener):
                 data_bytes_hex = data_bytes_hex[:dlc_value]
                 data_hex = ''.join(data_bytes_hex)
                 formatted_data_dlc = f"{dlc_value:4d} {data_hex}"
-                return {"ID": id_value, "DLC": formatted_data_dlc}
+                return {"ID": id_value, "DLC": formatted_data_dlc, "Timestamp": timestamp}
         return None
 
     def process_message_data(self, message_data):
@@ -46,7 +53,7 @@ class MyListener(can.Listener):
         self.processed_ids.add(id_value)
         self.message_buffer.append(message_data)
 
-        if len(self.message_buffer) >= 50:
+        if len(self.message_buffer) >= 5:
             self.make_batch_prediction()
 
     def make_batch_prediction(self):
@@ -71,7 +78,7 @@ class MyListener(can.Listener):
                     endpoint_id=os.environ["ENDPOINT_ID"],
                     instances=message_buffer
                 )'''
-                dockerPredictor(message_buffer)  # Chame sua função predict_with_docker aqui
+                dockerPrediction(message_buffer)  # Chame sua função predict_with_docker aqui
             except Exception as e:
                 print(e)
 
