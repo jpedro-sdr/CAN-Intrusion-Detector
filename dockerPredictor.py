@@ -1,22 +1,36 @@
 import requests
 import json
+from checkMessage import checkMsg
 
-def predict_with_docker(messages: list):
-    docker_server_url = "http://192.168.0.7:8081/predict"
+def dockerPredictor(messages: list):
+    docker_server_url = "http://192.168.0.3:8081/predict"
 
     try:
-        data = json.dumps({"instances": messages})  # Envie a lista de mensagens dentro de "instances"
-        headers = {"Content-Type": "application/json"}  # Defina o cabeçalho para indicar que você está enviando JSON
+        data = json.dumps({"instances": messages})  # Send the list of messages inside "instances"
+        headers = {"Content-Type": "application/json"}  # Set the header to indicate that you are sending JSON
 
-        response = requests.post(docker_server_url, data=data, headers=headers)  # Faça uma solicitação POST
+        # Loop through the messages to check each one
+        for message in messages:
+            id_value = message["ID"]
+            message_data = message["data"]
+            timestamp = message["timestamp"]
 
-        if response.status_code == 200:
-            result = response.json()
-            process_predictions(result)
-        else:
-            print("Erro na solicitação HTTP:", response.status_code)
+            # Check if the message is safe
+            is_safe = checkMsg(id_value, message_data, timestamp)
+
+            if is_safe:
+                # Only make the request if the message is safe
+                response = requests.post(docker_server_url, data=data, headers=headers)
+
+                if response.status_code == 200:
+                    result = response.json()
+                    process_predictions(result)
+                else:
+                    print("Error in HTTP request:", response.status_code)
+            else:
+                print("Not making a request for a dangerous message.")
     except Exception as e:
-        print("Erro na solicitação HTTP:", str(e))
+        print("Error in HTTP request:", str(e))
 
 def process_predictions(predictions: list):
     for prediction in predictions:
@@ -27,15 +41,3 @@ def process_predictions(predictions: list):
             print_red(message)
             with open("ReceivedMessages/DangerousMessages.txt", "a") as file:
                 file.write(message)
-
-def main():
-    # Exemplo de lista de mensagens contendo apenas "ID" e "DLC"
-    messages = [
-        {"ID": 123, "DLC": 112233},
-        {"ID": 234, "DLC": 223344},
-    ]
-
-    predict_with_docker(messages)
-
-if __name__ == "__main__":
-    main()
