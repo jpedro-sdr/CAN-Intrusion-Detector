@@ -3,6 +3,7 @@ import re
 import os
 import threading
 from predictor import predict_tabular_classification
+from dockerPredictor import dockerPredictor
 
 class MyListener(can.Listener):
     def __init__(self):
@@ -65,11 +66,12 @@ class MyListener(can.Listener):
     def call_predict(self, message_buffer):
         with self.lock:
             try:
-                predict_tabular_classification(
+                '''predict_tabular_classification(
                     project=os.environ["PROJECT_ID"],
                     endpoint_id=os.environ["ENDPOINT_ID"],
                     instances=message_buffer
-                )
+                )'''
+                dockerPredictor(message_buffer)  # Chame sua função predict_with_docker aqui
             except Exception as e:
                 print(e)
 
