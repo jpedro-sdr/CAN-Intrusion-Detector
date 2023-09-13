@@ -30,7 +30,7 @@ def predict_tabular_classification(
         print(" deployed_model_id:", response.deployed_model_id)
         predictions = response.predictions
         for instance_dict, prediction in zip(instances, predictions):
-            print(" prediction:", dict(prediction))
+            print("Prediction:", dict(prediction))
             if prediction['scores'][1] > 0.50:
                 id_value = instance_dict["ID"]
                 dlc_value = instance_dict["DLC"]
