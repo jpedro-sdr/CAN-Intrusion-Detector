@@ -8,7 +8,7 @@ def print_red(text):
     print("\033[91m" + text + "\033[0m")
 
 def dockerPrediction(messages: list):
-    docker_server_url = "http://172.20.36.224:8081/predict"
+    docker_server_url = "http://172.22.202.88:8081/predict"
 
     try:
         data = json.dumps({"instances": messages})  # Send the list of messages inside "instances"
