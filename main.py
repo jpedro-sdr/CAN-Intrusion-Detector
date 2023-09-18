@@ -3,7 +3,7 @@ import can
 import threading
 from my_listener import MyListener
 from notifier import Notifier
-from predictor import predict_tabular_classification
+# from predictor import predict_tabular_classification
 from dockerPredictor import dockerPrediction
 
 os.environ["ENDPOINT_ID"] = "539941573098471424"
