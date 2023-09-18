@@ -171,8 +171,8 @@ messages = [
             "signal": "Engine Cooling Water Temperature",
             "bitLength": 8,
             "bitStart": 0,
-            "min": 0,
-            "max": 255,
+            "min": -40,
+            "max": 215,
             "unit": "C",
             "scale": 1.00000,
             "offset": -40
@@ -854,13 +854,13 @@ messages = [
     "name": "Head Lights/Beam Indicator",
     "period": 500,
     "DLC": 1,
-    "pattern": r"0(.{1})(.{1})0000000000000",
-    "format": '0##0000000000000',
+    "pattern": r"(.{1})(.{1})00000000000000",
+    "format": '##00000000000000',
     "signals": [
         {
             "signal": "Head Lights Indicator",
             "bitLength": 1,
-            "bitStart": 1,
+            "bitStart": 0,
             "min": 0,
             "max": 1,
             "unit": "ON/OFF",
@@ -870,7 +870,7 @@ messages = [
         {
             "signal": "High Beam Indicator",
             "bitLength": 1,
-            "bitStart": 2,
+            "bitStart": 1,
             "min": 0,
             "max": 1,
             "unit": "ON/OFF",
@@ -1024,8 +1024,8 @@ messages = [
     "name": "Doors Open/Close | Locked/Unlocked Indicator",
     "period": 1000,
     "DLC": 1,
-    "pattern": r"(.{1})000000000000000",
-    "format": '#000000000000000',
+    "pattern": r"(.{1})(.{1})00000000000000",
+    "format": '##00000000000000',
     "signals": [
         {
             "signal": "Doors Open/Close Indicator",
@@ -1040,7 +1040,7 @@ messages = [
         {
             "signal": "Doors Locked/Unlocked Indicator",
             "bitLength": 1,
-            "bitStart": 0,
+            "bitStart": 1,
             "min": 0,
             "max": 1,
             "unit": "ON/OFF",
