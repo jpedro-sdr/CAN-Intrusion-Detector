@@ -114,16 +114,16 @@ def set_message_last_timestamp(id, timestamp):
 def checkMsg(id, data, timestamp):
     id = id.upper()
     data = data.upper()
+    # data = data.lstrip()
     if len(data) < 2:
         print(f'Data of message with id {id} is not allowed. Invasion detected')
         return False
-    data = data.lstrip()
         # Remova o primeiro caractere que não seja espaço
-    data = " ".join(data.split())
-    for i, char in enumerate(data):
-        if char != ' ':
-            data = data[:i] + data[i+1:]
-            break
+    # data = " ".join(data.split())
+    # for i, char in enumerate(data):
+    #     if char != ' ':
+    #         data = data[:i] + data[i+1:]
+    #         break
     # id = id.lstrip('0')
     # print('Data before transform', data)
     first_part_data = data[:2]
@@ -160,7 +160,7 @@ def checkMsg(id, data, timestamp):
 if __name__ == '__main__':
     # print(messages)
     cntt = 0
-    with open('canlog4.txt', 'r') as f:
+    with open('candump_new.txt', 'r') as f:
        lines = f.readlines()
        for line in lines:
            line = line.split(' ')
