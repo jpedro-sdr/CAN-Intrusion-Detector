@@ -112,6 +112,11 @@ def set_message_last_timestamp(id, timestamp):
 # (1694027572.059435) can0 360#8AD800C3A0000000
 
 def checkMsg(id, data, timestamp):
+    id = id.upper()
+    data = data.upper()
+    if len(data) < 2:
+        print(f'Data of message with id {id} is not allowed. Invasion detected')
+        return False
     data = data.lstrip()
         # Remova o primeiro caractere que não seja espaço
     data = " ".join(data.split())

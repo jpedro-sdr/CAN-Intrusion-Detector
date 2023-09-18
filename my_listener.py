@@ -4,6 +4,7 @@ import os
 import threading
 # from predictor import predict_tabular_classification
 from dockerPredictor import dockerPrediction
+from checkMessage import checkMsg, set_message_last_timestamp
 
 class MyListener(can.Listener):
     def __init__(self):
@@ -31,14 +32,14 @@ class MyListener(can.Listener):
             timestamp = float(timestamp_match.group(1))
             #print("TimeStamp:", timestamp)
         if match:
-            id_value = match.group(1)
+            id_value = match.group(1)[1:]
             dlc_value = int(match.group(2))
             data_bytes_hex = match.group(3).split()
 
             if len(data_bytes_hex) >= dlc_value:
                 data_bytes_hex = data_bytes_hex[:dlc_value]
                 data_hex = ''.join(data_bytes_hex)
-                formatted_data_dlc = f"{dlc_value:4d} {data_hex}"
+                formatted_data_dlc = f"{data_hex}"
                 return {"ID": id_value, "DLC": formatted_data_dlc, "Timestamp": timestamp}
         return None
 
@@ -46,7 +47,7 @@ class MyListener(can.Listener):
         id_value = message_data["ID"]
         formatted_data_dlc = message_data["DLC"]
         timestamp = message_data["Timestamp"]
-        message_string = f"Mensagem recebida - ID {str(int(id_value)).zfill(4)} - DLC {formatted_data_dlc}"
+        message_string = f"Mensagem recebida - ID {id_value} - DLC {formatted_data_dlc}"
         print(message_string)
         with open("ReceivedMessages/ReceivedMessages4.txt", "a") as file:
             file.write(message_string + "\n")
@@ -54,7 +55,8 @@ class MyListener(can.Listener):
         self.processed_ids.add(id_value)
             #timestamp ="2023‑09‑13 11:45:30.005"
             # Check if the message is safe
-        is_safe = checkMsg(id_value, message_data, timestamp)
+        print('sending to checkMsg', id_value, formatted_data_dlc, timestamp)
+        is_safe = checkMsg(id_value, formatted_data_dlc, timestamp)
         set_message_last_timestamp(id_value, timestamp)
 
         if is_safe:
@@ -64,8 +66,8 @@ class MyListener(can.Listener):
                 self.make_batch_prediction()
         else:
             with open("ReceivedMessages/DangerousMessages.txt", "a") as file:
-                message = f"Dangerous message ID: {id_value} - DLC: {dlc_value} - Timestamp: {timestamp} - Score: 1\n"
-                file.write(message_data)
+                message = f"Dangerous message ID: {id_value} - DLC: {formatted_data_dlc} - Timestamp: {timestamp} - Score: 1\n"
+                file.write(message + "\n")
 
     def make_batch_prediction(self):
         if self.message_buffer:
