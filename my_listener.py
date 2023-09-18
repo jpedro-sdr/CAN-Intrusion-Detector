@@ -2,7 +2,7 @@ import can
 import re
 import os
 import threading
-from predictor import predict_tabular_classification
+# from predictor import predict_tabular_classification
 from dockerPredictor import dockerPrediction
 
 class MyListener(can.Listener):
