@@ -64,15 +64,15 @@ def checkDataRange(data, expected_message):
     signals = newExtractSignalFromMessage(data, expected_message)
     # print(signals)
     for signal in signals:
-        # print(signal)
         signal_index = signals.index(signal)
         expected_signal = expected_message["signals"][signal_index]
         # print(signal, type(signal), 'antes do stringBinToInt')
         signal = stringBinToInt(signal)
         value = getSignalValue(signal, expected_signal)
-        # print(value, 'value')
+        # print(signal, 'signal')
         if not checkSignalRange(value, expected_signal):
-            print(f'Value of signal {expected_signal["signal"]} is out of range. Invasion detected')
+            # print(value, 'value')
+            # print(f'Value of signal {expected_signal["signal"]} is out of range. Invasion detected')
             return False
     return True
         # print(f'{expected_signal["signal"]}: {value}')
@@ -85,17 +85,19 @@ def checkPeriod(timestamp, id):
     
      
     if expected_message.get("last_message_timestamp") is None:
-        print(f'First message of message with id ${id}.')
+        # print(f'First message of message with id ${id}.')
         return True
     last_message_timestamp = expected_message["last_message_timestamp"]
     last_message_timestamp = datetime.datetime.fromtimestamp(last_message_timestamp)
     delta = evalueated_message_timestamp - last_message_timestamp
     milliseconds = delta.total_seconds() * 1000
     msg_period = expected_message["period"]
+    # print(f'Delta of message with id ${id} is {milliseconds} milliseconds. Allowed: {expected_message["period"]} milliseconds.')
 
     if milliseconds/msg_period < 0.95: # 5% of tolerance
         print(f'[Out of period] Period of message with id ${id} is lower than allowed. Allowed: {expected_message["period"]}, Received: {milliseconds}')
         return False
+    return True
 
 
 def set_message_last_timestamp(id, timestamp):
@@ -143,7 +145,7 @@ def checkMsg(id, data, timestamp):
 
 
 if __name__ == '__main__':
-    print(messages)
+    # print(messages)
     cntt = 0
     with open('canlog4.txt', 'r') as f:
        lines = f.readlines()
@@ -152,7 +154,7 @@ if __name__ == '__main__':
            id = line[2].split('#')[0]
            data = line[2].split('#')[1]
            timestamp = line[0].split('(')[1].split(')')[0]
-           print(timestamp, 'timestamp')
+           # print(timestamp, 'timestamp')
            timestamp = float(timestamp)
            isMsgValid = checkMsg(id, data, timestamp)
            set_message_last_timestamp(id, timestamp)
