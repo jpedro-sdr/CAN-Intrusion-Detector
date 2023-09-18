@@ -2,6 +2,9 @@ import re
 import datetime
 from messages import messages
 
+def print_red(text):
+    print('\033[91m' + text + '\033[0m')
+
 def get_message_by_id(target_id):
     for message in messages:
         if message["id"] == target_id:
@@ -116,7 +119,7 @@ def checkMsg(id, data, timestamp):
     data = data.upper()
     # data = data.lstrip()
     if len(data) < 2:
-        print(f'Data of message with id {id} is not allowed. Invasion detected')
+        print_red(f'Data of message with id {id} is not allowed. Invasion detected')
         return False
         # Remova o primeiro caractere que não seja espaço
     # data = " ".join(data.split())
@@ -138,19 +141,19 @@ def checkMsg(id, data, timestamp):
     # print(data_binary, type(data_binary), 'data_binary', data)
     expected_message = get_message_by_id(id)
     if expected_message is None:
-        print(f'Message with id {id} is not allowed in the message list. Invasion detected')
+        print_red(f'Message with id {id} is not allowed in the message list. Invasion detected')
         return False
     isFormatAllowed = checkDataFormat(data, expected_message)
     if not isFormatAllowed:
-        print(f'Format of message with id {id} is not allowed. Invasion detected')
+        print_red(f'Format of message with id {id} is not allowed. Invasion detected')
         return False
     areSignalsInRange = checkDataRange(data, expected_message)
     if not areSignalsInRange:
-        print(f'Values of signals of message with id {id} are out of range. Invasion detected')
+        print_red(f'Values of signals of message with id {id} are out of range. Invasion detected')
         return False
     isPeriodAllowed = checkPeriod(timestamp, id)
     if not isPeriodAllowed:
-        print(f'Timestamp of message with id {id} is not allowed. Invasion detected')
+        print_red(f'Timestamp of message with id {id} is not allowed. Invasion detected')
         return False
     return True
     

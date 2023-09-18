@@ -91,6 +91,7 @@ class MyListener(can.Listener):
                     endpoint_id=os.environ["ENDPOINT_ID"],
                     instances=message_buffer
                 )'''
+                #print("antes do dockerPredictor")
                 dockerPrediction(message_buffer)  # Chame sua função predict_with_docker aqui
             except Exception as e:
                 print(e)
