@@ -7,7 +7,7 @@ def print_red(text):
 
 def get_message_by_id(target_id):
     for message in messages:
-        if message["id"] == target_id:
+        if message["id"] == target_id.upper():
             return message
     return None
 

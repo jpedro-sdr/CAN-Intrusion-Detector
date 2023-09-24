@@ -1,3 +1,4 @@
+
 import can
 import re
 import os
@@ -40,7 +41,7 @@ class MyListener(can.Listener):
                 data_bytes_hex = data_bytes_hex[:dlc_value]
                 data_hex = ''.join(data_bytes_hex)
                 formatted_data_dlc = f"{data_hex}"
-                return {"ID": id_value, "DLC": formatted_data_dlc, "Timestamp": timestamp}
+                return {"ID": id_value.upper(), "DLC": formatted_data_dlc.upper(), "Timestamp": timestamp}
         return None
 
     def process_message_data(self, message_data):
